@@ -17,8 +17,7 @@ the short future.
 
 ## Installation
 
-	> cd plugins
-	> git clone git
+	> git submodule add git://github.com/jadb/cakephp-markitup.git plugins/markitup
 
 ## Configuration
 
