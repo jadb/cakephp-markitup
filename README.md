@@ -51,6 +51,7 @@ Configure any JS/CSS path from the view (optional):
 
 ## Bugs & Feedback
 
-http://github.com/jadb/markitup
+[http://github.com/jadb/cakephp-markitup/issues] [2]
 
 [1]: http://bakery.cakephp.org/articles/view/markitup-jquery-universal-markup-editor-helper
+[2]: http://github.com/jadb/cakephp-markitup/issues
