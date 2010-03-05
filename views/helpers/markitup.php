@@ -2,13 +2,22 @@
 class MarkitupHelper extends AppHelper {
 	public $helpers = array('Core.Html', 'Core.Form', 'Core.Javascript');
 	public $paths = array(
-		'jQuery' => 'jquery/',
-		'markItUp' => array(
-			'js' => 'markitup/',
-			'css' => '/js/markitup/',
-		)
+		'css' => '/js/markitup/',
+		'js' => 'markitup/',
 	);
 	public $vendors = array('markdown' => 'Markitup.Markdown');
+	public function __construct() {
+		$paths = Configure::read('Markitup.paths');
+		if (empty($paths)) {
+			return;
+		}
+
+		if (is_string($paths)) {
+			$paths = array('js' => $paths);
+		}
+
+		$this->paths = array_merge($this->paths, $paths);
+	}
 	/**
 	 * Generates a form textarea element complete with label and wrapper div with markItUp! applied.
 	 *
@@ -17,6 +26,7 @@ class MarkitupHelper extends AppHelper {
 	 * @return string  An <textarea /> element.
 	 */
 	public function editor($name, $settings = array()) {
+		$this->Javascript->link($this->paths['js'] . 'jquery.markitup', false);
 		$config = $this->_build($settings);
 		$settings = $config['settings'];
 		$default = $config['default'];
@@ -115,24 +125,9 @@ class MarkitupHelper extends AppHelper {
 			$content = $class($content);
 		}
 
-		echo $this->Html->css($this->paths['markItUp']['css'] . 'templates' . DS . 'preview', null, null, false);
+		echo $this->Html->css($this->paths['css'] . 'templates' . DS . 'preview', null, null, false);
 
 		return $content;
-	}
-	public function beforeRender() {
-		$urls = array(
-			$this->paths['jQuery'] . 'jquery',
-			$this->paths['markItUp']['js'] . 'jquery.markitup',
-		);
-
-		// only use the packed scripts when not in debug mode
-		if (!Configure::read('debug')) {
-			$urls[0] .= '.min';
-			$urls[1] .= '.pack';
-		}
-
-
-		$this->Javascript->link($urls, false);
 	}
 	protected function _build($settings) {
 		$default = array(
@@ -152,11 +147,11 @@ class MarkitupHelper extends AppHelper {
 		}
 
 		$this->Html->css(array(
-			$this->paths['markItUp']['css'] . 'skins' . DS . $settings['skin'] . DS . 'style',
-			$this->paths['markItUp']['css'] . 'sets' . DS . $settings['set'] . DS . 'style',
+			$this->paths['css'] . 'skins' . DS . $settings['skin'] . DS . 'style',
+			$this->paths['css'] . 'sets' . DS . $settings['set'] . DS . 'style',
 		), null, null, false);
 
-		$this->Javascript->link($this->paths['markItUp']['js'] . 'sets' . DS . $settings['set'] . DS . 'set', false);
+		$this->Javascript->link($this->paths['js'] . 'sets' . DS . $settings['set'] . DS . 'set', false);
 
 		return array('settings' => $settings, 'default' => $default);
 	}
